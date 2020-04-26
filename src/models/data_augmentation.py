@@ -79,6 +79,74 @@ def build_rotation_matrix(axis, rot_angle):
     return rotation_matrix
 
 
+def mirror_skeleton(skeleton):
+    r"""Mirrors the skeleton. Eg. left hand becomes right hand, etc.
+
+    Inputs:
+        **skeleton** (np array): Skeleton sequence of shape `(3 {x, y, z}, max_frame, num_joint=25, n_subjects=2)`
+
+    Outputs:
+        **skeleton** (np array): Randomly rotated skeleton sequence of shape
+        `(3 {x, y, z}, max_frame, num_joint=25, n_subjects=2)`
+    """
+
+    '''
+    skeleton_aug = np.zeros(skeleton.shape)
+    skeleton_aug[:, :, Joints.SPINEBASE:Joints.HEAD+1] = skeleton[:, :, Joints.SPINEBASE:Joints.HEAD+1].copy()
+
+    skeleton_aug[:, :, Joints.SHOULDERLEFT] = skeleton[:, :, Joints.SHOULDERRIGHT]
+    skeleton_aug[:, :, Joints.ELBOWLEFT] = skeleton[:, :, Joints.ELBOWRIGHT]
+    skeleton_aug[:, :, Joints.WRISTLEFT] = skeleton[:, :, Joints.WRISTRIGHT]
+    skeleton_aug[:, :, Joints.HANDLEFT] = skeleton[:, :, Joints.HANDRIGHT]
+    '''
+
+    skeleton[:, :, Joints.SHOULDERLEFT, :], skeleton[:, :, Joints.SHOULDERRIGHT] = \
+        skeleton[:, :, Joints.SHOULDERRIGHT].copy(), skeleton[:, :, Joints.SHOULDERLEFT, :].copy()
+    skeleton[:, :, Joints.ELBOWLEFT, :], skeleton[:, :, Joints.ELBOWRIGHT] = \
+        skeleton[:, :, Joints.ELBOWRIGHT].copy(), skeleton[:, :, Joints.ELBOWLEFT, :].copy()
+    skeleton[:, :, Joints.WRISTLEFT, :], skeleton[:, :, Joints.WRISTRIGHT] = \
+        skeleton[:, :, Joints.WRISTRIGHT].copy(), skeleton[:, :, Joints.WRISTLEFT, :].copy()
+    skeleton[:, :, Joints.HANDLEFT, :], skeleton[:, :, Joints.HANDRIGHT] = \
+        skeleton[:, :, Joints.HANDRIGHT].copy(), skeleton[:, :, Joints.HANDLEFT, :].copy()
+    skeleton[:, :, Joints.HIPLEFT, :], skeleton[:, :, Joints.HIPRIGHT] = \
+        skeleton[:, :, Joints.HIPRIGHT].copy(), skeleton[:, :, Joints.HIPLEFT, :].copy()
+    skeleton[:, :, Joints.KNEELEFT, :], skeleton[:, :, Joints.KNEERIGHT] = \
+        skeleton[:, :, Joints.KNEERIGHT].copy(), skeleton[:, :, Joints.KNEELEFT, :].copy()
+    skeleton[:, :, Joints.ANKLELEFT, :], skeleton[:, :, Joints.ANKLERIGHT] = \
+        skeleton[:, :, Joints.ANKLERIGHT].copy(), skeleton[:, :, Joints.ANKLELEFT, :].copy()
+    skeleton[:, :, Joints.FOOTLEFT, :], skeleton[:, :, Joints.FOOTRIGHT] = \
+        skeleton[:, :, Joints.FOOTRIGHT].copy(), skeleton[:, :, Joints.FOOTLEFT, :].copy()
+    skeleton[:, :, Joints.HANDTIPLEFT, :], skeleton[:, :, Joints.HANDTIPRIGHT] = \
+        skeleton[:, :, Joints.HANDTIPRIGHT].copy(), skeleton[:, :, Joints.HANDTIPLEFT, :].copy()
+    skeleton[:, :, Joints.THUMBLEFT, :], skeleton[:, :, Joints.THUMBRIGHT] = \
+        skeleton[:, :, Joints.THUMBRIGHT].copy(), skeleton[:, :, Joints.THUMBLEFT, :].copy()
+
+
+    '''
+    skeleton[:, :, [Joints.SHOULDERLEFT, Joints.SHOULDERRIGHT], :] = \
+        skeleton[:, :, [Joints.SHOULDERRIGHT, Joints.SHOULDERLEFT], :]
+    skeleton[:, :, [Joints.ELBOWLEFT, Joints.ELBOWRIGHT], :] = \
+        skeleton[:, :, [Joints.ELBOWRIGHT, Joints.ELBOWLEFT], :]
+    skeleton[:, :, [Joints.WRISTLEFT, Joints.WRISTRIGHT], :] = \
+        skeleton[:, :, [Joints.WRISTRIGHT, Joints.WRISTLEFT], :]
+    skeleton[:, :, [Joints.HANDLEFT, Joints.HANDRIGHT], :] = \
+        skeleton[:, :, [Joints.HANDRIGHT, Joints.HANDLEFT], :]
+    skeleton[:, :, [Joints.HIPLEFT, Joints.HIPRIGHT], :] = \
+        skeleton[:, :, [Joints.HIPRIGHT, Joints.HIPLEFT], :]
+    skeleton[:, :, [Joints.KNEELEFT, Joints.KNEERIGHT], :] = \
+        skeleton[:, :, [Joints.KNEERIGHT, Joints.KNEELEFT], :]
+    skeleton[:, :, [Joints.ANKLELEFT, Joints.ANKLERIGHT], :] = \
+        skeleton[:, :, [Joints.ANKLERIGHT, Joints.ANKLELEFT], :]
+    skeleton[:, :, [Joints.FOOTLEFT, Joints.FOOTRIGHT], :] = \
+        skeleton[:, :, [Joints.FOOTRIGHT, Joints.FOOTLEFT], :]
+    skeleton[:, :, [Joints.HANDTIPLEFT, Joints.HANDRIGHT], :] = \
+        skeleton[:, :, [Joints.HANDRIGHT, Joints.HANDTIPLEFT], :]
+    skeleton[:, :, [Joints.THUMBLEFT, Joints.THUMBRIGHT], :] = \
+        skeleton[:, :, [Joints.THUMBRIGHT, Joints.THUMBLEFT], :]
+    '''
+    return skeleton
+
+
 def rotate_skeleton(skeleton):
     r"""Rotates the skeleton sequence around its different axis.
 

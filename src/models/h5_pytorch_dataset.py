@@ -69,7 +69,11 @@ class TorchDataset(torch.utils.data.Dataset):
             - **y** (int): Class label of sequence.
 
         """
+        # Get label
         y = int(self.samples_names[index][-3:]) - 1
+
+        # Generate a random value. If <=0.5, the skeleton and IR video will be flipped
+        flip_chance = random.random()
 
         # Open h5 files
         if self.use_pose:
@@ -88,7 +92,7 @@ class TorchDataset(torch.utils.data.Dataset):
                 ir_video = ir_dataset[self.samples_names[index]]["ir"][:] # shape (n_frames, H, W)
 
                 # 50% chance to flip video
-                if self.augment_data and random.random() <= 0.5:
+                if self.augment_data and flip_chance <= 0.5:
                     ir_video = np.flip(ir_video, axis=2)
 
         # Potential outputs
@@ -111,6 +115,8 @@ class TorchDataset(torch.utils.data.Dataset):
 
             # Data augmentation : rotation around x, y, z axis (see data_augmentation.py for values)
             if self.augment_data:
+                if flip_chance <= 0.5:
+                    skeleton = mirror_skeleton(skeleton)
                 skeleton = rotate_skeleton(skeleton)
 
             # Map to RGB image

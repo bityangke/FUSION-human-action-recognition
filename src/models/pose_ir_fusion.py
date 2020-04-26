@@ -49,6 +49,7 @@ class FUSION(nn.Module):
             self.ir_net = nn.Sequential(*list(r2plus1d_18(pretrained=pretrained).children())[:-1])
 
         # Compute number of classification MLP input features
+        mlp_input_features = 512
         if use_ir and use_pose:
             if self.fusion_scheme == "CONCAT":
                 mlp_input_features = 2 * 512
